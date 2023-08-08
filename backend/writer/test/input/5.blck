@@ -1,0 +1,7 @@
+-size: 48px;
+    letter-spacing: 2px;
+  }
+  .header p {
+    margin: 10px 0;
+    font-size: 18px;
+  }
