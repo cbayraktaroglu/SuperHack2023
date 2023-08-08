@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	wrtr, _ := blckWriter.NewBLCKWriter("YOURPRIVKEY", "https://polygon-mumbai.gateway.tenderly.co")
+	wrtr, _ := blckWriter.NewBLCKWriter("YOURKEY", "https://polygon-mumbai.gateway.tenderly.co")
 
 	//TODO error handling
 	root := "./input"

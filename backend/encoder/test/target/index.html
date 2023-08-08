@@ -22,6 +22,7 @@
     margin: 0;
     font-size: 48px;
     letter-spacing: 2px;
+    transition: transform 0.2s ease;
   }
   .header p {
     margin: 10px 0;
@@ -32,6 +33,8 @@
     justify-content: center;
     align-items: center;
     height: 80vh;
+    background-color: #111; /* Initial background color */
+    transition: background-color 2s ease; /* Transition for color change */
   }
   .content {
     text-align: center;
@@ -46,20 +49,6 @@
     line-height: 1.6;
     margin-bottom: 30px;
   }
-  .cta-button {
-    display: inline-block;
-    padding: 10px 30px;
-    font-size: 18px;
-    background-color: #00aaff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .cta-button:hover {
-    background-color: #0077cc;
-  }
   .footer {
     background-color: #111;
     padding: 20px 0;
@@ -70,6 +59,19 @@
     font-size: 14px;
   }
 </style>
+<script>
+  // Color-changing animation using JavaScript
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.querySelector(".container");
+    const colors = ["#111", "#00aaff", "#ff0077", "#00ff88"]; // Add more colors as needed
+    let currentColorIndex = 0;
+
+    setInterval(() => {
+      currentColorIndex = (currentColorIndex + 1) % colors.length;
+      container.style.backgroundColor = colors[currentColorIndex];
+    }, 3000); // Change color every 3 seconds
+  });
+</script>
 </head>
 <body>
 <div class="header">
@@ -80,7 +82,6 @@
   <div class="content">
     <h2>Discover the Future with Us</h2>
     <p>At TechFuturix, we're dedicated to pushing the boundaries of technology innovation. Join us in creating a brighter, more connected future.</p>
-    <a href="#" class="cta-button">Get Started</a>
   </div>
 </div>
 <div class="footer">

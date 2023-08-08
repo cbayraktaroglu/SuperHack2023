@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	encoder, _ := blckEncoder.NewBLCKEncoder(100)
-	err := encoder.ConvertFile("./target/index.html", "./output")
+	encoder, _ := blckEncoder.NewBLCKEncoder(10000)
+	err := encoder.ConvertFile("./target/optum.gif", "./output")
 	log.Print(err)
 }
