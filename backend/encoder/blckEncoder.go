@@ -2,7 +2,10 @@ package blckEncoder
 
 import (
 	"bufio"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
+	"io"
 	"os"
 	"strconv"
 )
@@ -72,6 +75,28 @@ func (blckEncd *BLCKEncoder) ResetBuffer() {
 
 func (blckEncd *BLCKEncoder) IncrementPartNumber() {
 	blckEncd.partNumber += 1
+	return
+}
+
+func (blckEncd *BLCKEncoder) GetFileCheckSumSHA256(filePath string) (checksum string, err error) {
+	targetFile, err := os.Open(filePath)
+
+	if err != nil {
+		return
+	}
+
+	defer targetFile.Close()
+
+	hash := sha256.New()
+
+	_, err = io.Copy(hash, targetFile)
+
+	if err != nil {
+		return
+	}
+
+	checksum = hex.EncodeToString(hash.Sum(nil))
+
 	return
 }
 

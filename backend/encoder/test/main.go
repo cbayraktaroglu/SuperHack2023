@@ -6,7 +6,13 @@ import (
 )
 
 func main() {
-	encoder, _ := blckEncoder.NewBLCKEncoder(10000)
-	err := encoder.ConvertFile("./target/optum.gif", "./output")
-	log.Print(err)
+	encoder, _ := blckEncoder.NewBLCKEncoder(62750)
+	checksum, _ := encoder.GetFileCheckSumSHA256("./target/optum.gif")
+	log.Println("File checksum:", checksum)
+
+	checksum, _ = encoder.GetFileCheckSumSHA256("./target/index.gif")
+	log.Println("File checksum:", checksum)
+
+	//err := encoder.ConvertFile("./target/optum.gif", "./output")
+	//log.Print(err)
 }
