@@ -3,6 +3,7 @@
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 	import { NumberInput, Fileupload, Label, Helper, Button } from 'flowbite-svelte';
+	import { Icon } from 'flowbite-svelte-icons';
 	import {
 		Table,
 		TableBody,
@@ -130,7 +131,7 @@
 						<TableBodyCell>{item.file_name}</TableBodyCell>
 						<TableBodyCell>{item.file_size}</TableBodyCell>
 						<TableBodyCell>
-							<HueButton buttonText="->" triggerFunction={handleFileUpload} />
+							<Button class="!p-2"><Icon name="arrow-right-outline" class="w-5 h-5" /></Button>
 						</TableBodyCell>
 					</TableBodyRow>
 				{/each}
