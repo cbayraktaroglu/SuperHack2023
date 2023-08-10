@@ -8,17 +8,10 @@
 	import detectEthereumProvider from '@metamask/detect-provider';
 	import { onMount } from 'svelte';
 	import { Label } from 'flowbite-svelte';
-
 	// Progress indicator
 	let progress: number;
 	Progress.subscribe((value) => {
 		progress = value;
-	});
-
-	// Encode endpoint response
-	let blockList: BlockList[];
-	TheBlockList.subscribe((value) => {
-		blockList = value;
 	});
 
 	onMount(async () => {
@@ -104,6 +97,30 @@
 			});
 			// .then((txHash: string) => console.log(txHash))
 			// .catch((error: any) => console.error(error));
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	// Function for getting connected MetaMask wallet and will be called on every page load
+	async function getConnectedMetaMaskWallet(): Promise<void> {
+		const metaMaskEth = await detectEthereumProvider();
+		if (!metaMaskEth) {
+			console.log('MetaMask extension not found');
+			return;
+		}
+		try {
+			const accounts = (await metaMaskEth.request({
+				method: 'eth_accounts',
+				params: []
+			})) as string[];
+			if (accounts.length == 0) {
+				console.log('No accounts found. Please Connect Again!');
+				return;
+			} else {
+				walletAddress = accounts[0];
+				console.log(accounts);
+			}
 		} catch (error) {
 			console.log(error);
 		}
