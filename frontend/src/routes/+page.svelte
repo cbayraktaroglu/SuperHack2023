@@ -41,6 +41,7 @@
 		console.log(blockList);
 	}
 
+	// Function for handling first file upload
 	function handleFileUpload(event: Event): void {
 		if (selectedFile) {
 			if (selectedFile.size < value || value == 0) {
@@ -71,6 +72,30 @@
 					console.error('Error uploading file :', error);
 				});
 		}
+	}
+
+	// Function for getting individual .blck file data
+	function processBLCK(blck: BlockList): any {
+		return function (event: Event): void {
+			console.log(blck.file_name);
+
+			fetch('http://localhost:3000/data/' + blck.file_name, {
+				method: 'GET'
+			})
+				.then((response) => {
+					if (response.ok) {
+						return response.json();
+					} else {
+						throw new Error('Error uploading file: ' + response.statusText);
+					}
+				})
+				.then((serverResponse: any) => {
+					console.log(serverResponse);
+				})
+				.catch((error) => {
+					console.error('Error uploading file :', error);
+				});
+		};
 	}
 </script>
 
@@ -131,7 +156,9 @@
 						<TableBodyCell>{item.file_name}</TableBodyCell>
 						<TableBodyCell>{item.file_size}</TableBodyCell>
 						<TableBodyCell>
-							<Button class="!p-2"><Icon name="arrow-right-outline" class="w-5 h-5" /></Button>
+							<Button class="!p-2" on:click={processBLCK(item)}
+								><Icon name="arrow-right-outline" class="w-5 h-5" /></Button
+							>
 						</TableBodyCell>
 					</TableBodyRow>
 				{/each}

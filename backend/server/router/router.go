@@ -1,6 +1,7 @@
 package router
 
 import (
+	"SuperHack2023/server/api/data"
 	"SuperHack2023/server/api/encode"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ func New() *gin.Engine {
 
 	// Endpoints
 	router.POST("/encode", encode.Handler())
+	router.GET("/data/:fileName", data.Handler())
 
 	return router
 }
