@@ -74,7 +74,7 @@ func main() {
 	txList := strings.Split("0x251decded9409a3687817eb497d38dc83c34fb6a8f8588dfe71a2f2d8405acb9 0x89901f80db6639cdc5f70b0cc8b0ebeed2b55c47fba26514ce249dc609be0d18 0xfdfc589ea532dee1942f2ea37f2fdcbcfb578f551c6dc769e8b1dffdbc58fbd7 0xa33cae70c0758a422119f7ca91bb4bef794d5eddfa505ccb133eadc90cf5d9c1 0x179b05a2321f8686d0e7bbcd6f8afa9c133411084d541a9c0bcc5d85681c4528", " ")
 	log.Print(len(txList))
 
-	targetFile, err := os.Create("./output/index.gif")
+	targetFile, err := os.Create("./output/uploaded.gif")
 
 	if err != nil {
 		log.Print("Error while crating the file: ", err)

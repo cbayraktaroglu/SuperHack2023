@@ -10,7 +10,7 @@ func main() {
 	checksum, _ := encoder.GetFileCheckSumSHA256("./target/optum.gif")
 	log.Println("File checksum:", checksum)
 
-	checksum, _ = encoder.GetFileCheckSumSHA256("./target/index.gif")
+	checksum, _ = encoder.GetFileCheckSumSHA256("./target/uploaded.gif")
 	log.Println("File checksum:", checksum)
 
 	//err := encoder.ConvertFile("./target/optum.gif", "./output")

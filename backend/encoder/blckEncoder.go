@@ -18,6 +18,11 @@ type BLCKEncoder struct {
 	outputFile        *os.File
 }
 
+type BLCKEncoderEncodedFileInfo struct {
+	FileName string `json:"file_name"`
+	FileSize int    `json:"file_size"`
+}
+
 func NewBLCKEncoder(limit int) (encoder *BLCKEncoder, err error) {
 	// Sanity check
 	if limit <= 0 {
@@ -142,6 +147,72 @@ func (blckEncd *BLCKEncoder) ConvertFile(inputPath string, outputPath string) (e
 			}
 
 			writer.Flush()
+
+			blckEncd.ResetBuffer()
+			blckEncd.IncrementPartNumber()
+
+			if readErr != nil {
+				break
+			}
+		}
+	}
+
+	return
+}
+
+func (blckEncd *BLCKEncoder) ConvertFileWOutput(inputPath string, outputPath string) (data []BLCKEncoderEncodedFileInfo, err error) {
+	// First reset the stats
+	blckEncd.Reset()
+
+	// Open the target file
+	targetFile, err := os.Open(inputPath)
+
+	if err != nil {
+		return
+	}
+
+	defer targetFile.Close()
+
+	// Initialize the buffered reader
+	reader := bufio.NewReader(targetFile)
+
+	numberOfBytes := 0
+
+	//Reading Loop
+	for {
+		byteValue, readErr := reader.ReadByte()
+
+		// Write it to the buffer
+		blckEncd.encodeBuffer = append(blckEncd.encodeBuffer, byteValue)
+		// Since the above function only reads 1 byte increse the counter by one
+		blckEncd.currentBufferSize += 1
+
+		if blckEncd.currentBufferSize >= blckEncd.sizeLimit || readErr != nil {
+
+			blckEncd.outputFile, err = os.Create(outputPath + "/" + blckEncd.GetCurrentPartNumberString() + ".blck")
+
+			if err != nil {
+				return
+			}
+
+			writer := bufio.NewWriter(blckEncd.outputFile)
+
+			numberOfBytes, err = writer.Write(blckEncd.encodeBuffer)
+
+			if err != nil {
+				return
+			}
+
+			err = writer.Flush()
+
+			if err != nil {
+				return
+			}
+
+			data = append(data, BLCKEncoderEncodedFileInfo{
+				FileName: blckEncd.GetCurrentPartNumberString() + ".blck",
+				FileSize: numberOfBytes,
+			})
 
 			blckEncd.ResetBuffer()
 			blckEncd.IncrementPartNumber()
