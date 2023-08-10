@@ -4,12 +4,69 @@
 	import BlckTable from './BLCKTable.svelte';
 	import logo from '$lib/images/Logo.webp';
 	import logo_fallback from '$lib/images/Logo.png';
+	import HueButton from './HueButton.svelte';
+	import detectEthereumProvider from '@metamask/detect-provider';
+	import { onMount } from 'svelte';
 
 	// Progress indicator
 	let progress: number;
 	Progress.subscribe((value) => {
 		progress = value;
 	});
+
+	// Encode endpoint response
+	let blockList: BlockList[];
+	TheBlockList.subscribe((value) => {
+		blockList = value;
+	});
+
+	onMount(async () => {
+		await getConnectedMetaMaskWallet();
+	});
+
+	// MetaMask wallet connection
+	let walletAddress: string;
+	async function connectMetaMaskWallet(): Promise<void> {
+		const metaMaskEth = await detectEthereumProvider();
+		if (!metaMaskEth) {
+			console.log('MetaMask extension not found');
+			return;
+		}
+		try {
+			const accounts = (await metaMaskEth.request({
+				method: 'eth_requestAccounts',
+				params: []
+			})) as string[];
+			walletAddress = accounts[0];
+			console.log(accounts);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	// Function for getting connected MetaMask wallet and will be called on every page load
+	async function getConnectedMetaMaskWallet(): Promise<void> {
+		const metaMaskEth = await detectEthereumProvider();
+		if (!metaMaskEth) {
+			console.log('MetaMask extension not found');
+			return;
+		}
+		try {
+			const accounts = (await metaMaskEth.request({
+				method: 'eth_accounts',
+				params: []
+			})) as string[];
+			if (accounts.length == 0) {
+				console.log('No accounts found. Please Connect Again!');
+				return;
+			} else {
+				walletAddress = accounts[0];
+				console.log(accounts);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 </script>
 
 <svelte:head>
