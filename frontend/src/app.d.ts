@@ -8,5 +8,7 @@ declare global {
 		// interface Platform {}
 	}
 }
-
+interface Window {
+  ethereum: any;
+}
 export {};
