@@ -7,6 +7,7 @@
 	import HueButton from './HueButton.svelte';
 	import detectEthereumProvider from '@metamask/detect-provider';
 	import { onMount } from 'svelte';
+	import { Label } from 'flowbite-svelte';
 
 	// Progress indicator
 	let progress: number;
@@ -32,7 +33,6 @@
 			console.log('MetaMask extension not found');
 			return;
 		}
-
 		try {
 			const accounts = (await metaMaskEth.request({
 				method: 'eth_requestAccounts',
@@ -121,6 +121,15 @@
 		<img src={logo_fallback} alt="Welcome" />
 	</picture>
 </div>
+
+	<Label class="p-3">
+		<HueButton
+			buttonText={walletAddress && walletAddress.length > 0
+				? `Connected: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
+				: 'Connect Your Wallet!'}
+			triggerFunction={connectMetaMaskWallet}
+		/>
+	</Label>
 
 	<Label class="p-3">
 		<HueButton
