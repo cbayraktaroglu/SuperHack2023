@@ -24,7 +24,15 @@
 	</picture>
 </div>
 
-<section>
+	<Label class="p-3">
+		<HueButton
+			buttonText={walletAddress && walletAddress.length > 0
+				? `Connected: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
+				: 'Connect Your Wallet!'}
+			triggerFunction={connectMetaMaskWallet}
+		/>
+	</Label>
+
 	{#if progress == 0}
 		<UploadWidget />
 	{/if}
