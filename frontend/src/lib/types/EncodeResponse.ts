@@ -1,15 +1,11 @@
 
-export interface EncodeResponse {
-    Data: EncodeResponseData;
-    Status: boolean;
-}
-
-export interface EncodeResponseData {
-    Checksum: string;
-    FileList: BlockList[];
+export interface BLCKFile {
+    checksum: string
+    files: BlockList[]
 }
 
 export interface BlockList {
     file_name: string;
     file_size: number;
+    data: Uint8Array;
 }

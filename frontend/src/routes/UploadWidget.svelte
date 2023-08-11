@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { EncodeResponse, EncodeResponseData, BlockList } from '$lib/types/EncodeResponse';
+	import type { BLCKFile, BlockList } from '$lib/types/EncodeResponse';
 	import { Progress, TheBlockList } from '$lib/store/store';
 	import { NumberInput, Fileupload, Label, Helper } from 'flowbite-svelte';
 	import HueButton from './HueButton.svelte';
+	import CryptoJS from 'crypto-js';
 
 	// Parameters for local file upload
 	let files: FileList;
@@ -21,39 +22,92 @@
 		}
 	}
 
-	// Function for handling first file upload
-	function handleFileUpload(event: Event): void {
-		console.log('Ho hey!');
+	// Divides the file into .blcks and calculates the checksum of the original file
+	const processTheFile = async (file: File) => {
+		const reader = new FileReader();
+
+		return new Promise<BLCKFile>((resolve, reject) => {
+			reader.onload = () => {
+				if (selectedFile) {
+					// Init the return variable
+					let retInfo: BLCKFile = {
+						checksum: '',
+						files: []
+					};
+
+					// Calculate the checksum
+					const wordArray = CryptoJS.lib.WordArray.create(reader.result);
+					const checksum = CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);
+
+					// Assign the checksum
+					retInfo.checksum = checksum;
+
+					// Start file processing
+					var lastFileSize = selectedFile.size % value;
+					var numberOfFiles = (selectedFile.size - lastFileSize) / value;
+
+					console.log('Last file size: ' + lastFileSize);
+					console.log('Number of files: ' + numberOfFiles);
+
+					var blockList: BlockList[] = [];
+
+					for (let i = 0; i < numberOfFiles + 1; i++) {
+						let upperLimit = value;
+
+						if (i == numberOfFiles) {
+							upperLimit = lastFileSize;
+						}
+
+						let buffer = new Uint8Array(reader.result as ArrayBuffer, i * value, upperLimit);
+
+						let item: BlockList = {
+							file_name: i + '.blck',
+							file_size: buffer.length,
+							data: buffer
+						};
+
+						if (i == numberOfFiles) {
+							item.file_size = lastFileSize;
+						}
+
+						blockList[i] = item;
+					}
+
+					// Assign blocklist
+					retInfo.files = blockList;
+
+					resolve(retInfo);
+				}
+
+				reject();
+			};
+
+			reader.onerror = (error) => {
+				reject(error);
+			};
+
+			reader.readAsArrayBuffer(file);
+		});
+	};
+
+	function handleFile(event: Event): void {
 		if (selectedFile) {
-			console.log('Ho hey!!');
+			// Sanity check
 			if (selectedFile.size < value || value == 0) {
 				console.log('Secified block size can not be bigger than the original file size!');
 				return;
 			}
-			const formData = new FormData();
-			formData.append('file', selectedFile);
-			formData.append('blockSize', '' + value);
-
-			fetch('http://localhost:3000/encode', {
-				method: 'POST',
-				body: formData
-			})
-				.then((response) => {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw new Error('Error uploading file: ' + response.statusText);
-					}
-				})
-				.then((serverResponse: EncodeResponse) => {
-					console.log(serverResponse.Data);
+			processTheFile(selectedFile)
+				.then((result) => {
+					console.log(`Checksum of ${selectedFile?.name}: ${result.checksum}`);
+					console.log(result.files);
 
 					// Update the stored variables
-					TheBlockList.set(serverResponse.Data.FileList);
+					TheBlockList.set(result.files);
 					Progress.set(1);
 				})
 				.catch((error) => {
-					console.error('Error uploading file :', error);
+					console.error('Error calculating checksum:', error);
 				});
 		}
 	}
@@ -79,7 +133,7 @@
 			</Helper>
 		</Label>
 		<Label class="p-3">
-			<HueButton buttonText="Upload!" triggerFunction={handleFileUpload} />
+			<HueButton buttonText="Upload!" triggerFunction={handleFile} />
 		</Label>
 	{/each}
 {/if}
