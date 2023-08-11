@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { BLCKFile, BlockList } from '$lib/types/EncodeResponse';
-	import { Progress, TheBlockList } from '$lib/store/store';
+	import { Progress, ProcessedInput } from '$lib/store/store';
 	import { NumberInput, Fileupload, Label, Helper } from 'flowbite-svelte';
-	import HueButton from './HueButton.svelte';
+	import HueButton from '$lib/components/HueButton.svelte';
 	import CryptoJS from 'crypto-js';
 
 	// Parameters for local file upload
@@ -70,7 +70,9 @@
 							item.file_size = lastFileSize;
 						}
 
-						blockList[i] = item;
+						if (!(i == numberOfFiles && lastFileSize == 0)) {
+							blockList[i] = item;
+						}
 					}
 
 					// Assign blocklist
@@ -103,7 +105,7 @@
 					console.log(result.files);
 
 					// Update the stored variables
-					TheBlockList.set(result.files);
+					ProcessedInput.set(result);
 					Progress.set(1);
 				})
 				.catch((error) => {
