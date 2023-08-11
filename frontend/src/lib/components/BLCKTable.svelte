@@ -23,6 +23,19 @@
 
 	let txHasList: string[] = [];
 
+	// To keep track of the processed .blck files
+	let isProcessed: { [key: string]: boolean } = {};
+	let numberOfProcessed: number = 0;
+
+	// Listener for updating the progress
+	$: if (numberOfProcessed) {
+		console.log(numberOfProcessed);
+
+		if (numberOfProcessed == blckFile.files.length) {
+			Progress.set(2);
+		}
+	}
+
 	//TODO duplicated code make it componenent and store wallet address in store as well
 	async function sendBlockData(
 		toAddres: string,
@@ -59,6 +72,9 @@
 
 			// Update the global variable store
 			TxList.set(txHasList);
+
+			isProcessed[fileNum + '.blck'] = true;
+			numberOfProcessed = numberOfProcessed + 1;
 
 			console.log('TxHash added to list!', hash);
 		} catch (error) {
@@ -101,8 +117,11 @@
 				<TableBodyCell>{item.file_name}</TableBodyCell>
 				<TableBodyCell>{item.file_size}</TableBodyCell>
 				<TableBodyCell>
-					<Button color="dark" class="!p-2" on:click={processBLCK(item)}
-						><Icon name="arrow-right-outline" class="w-5 h-5" /></Button
+					<Button
+						disabled={isProcessed[item.file_name]}
+						color="dark"
+						class="!p-2"
+						on:click={processBLCK(item)}><Icon name="arrow-right-outline" class="w-5 h-5" /></Button
 					>
 				</TableBodyCell>
 			</TableBodyRow>

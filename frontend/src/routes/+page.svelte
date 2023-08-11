@@ -100,6 +100,10 @@
 	{#if progress == 1}
 		<BlckTable />
 	{/if}
+
+	{#if progress == 2}
+		<Label>Now we need to connect this to the smart contract to send all the tx hashes to it</Label>
+	{/if}
 </section>
 
 <style>
