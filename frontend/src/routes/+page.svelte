@@ -2,6 +2,7 @@
 	import { Progress } from '$lib/store/store';
 	import FileProcessor from '../lib/components/FileProcessor.svelte';
 	import BlckTable from '../lib/components/BLCKTable.svelte';
+	import SmartContractBridge from '$lib/components/SmartContractBridge.svelte';
 	import logo from '$lib/images/Logo.webp';
 	import logo_fallback from '$lib/images/Logo.png';
 	import HueButton from '../lib/components/HueButton.svelte';
@@ -102,7 +103,7 @@
 	{/if}
 
 	{#if progress == 2}
-		<Label>Now we need to connect this to the smart contract to send all the tx hashes to it</Label>
+		<SmartContractBridge />
 	{/if}
 </section>
 
