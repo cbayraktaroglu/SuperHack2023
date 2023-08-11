@@ -32,6 +32,7 @@
 			console.log('MetaMask extension not found');
 			return;
 		}
+
 		try {
 			const accounts = (await metaMaskEth.request({
 				method: 'eth_requestAccounts',
@@ -39,6 +40,12 @@
 			})) as string[];
 			walletAddress = accounts[0];
 			console.log(accounts);
+			// Get chain Id and console log it
+			const chainId = (await metaMaskEth.request({
+				method: 'eth_chainId',
+				params: []
+			})) as string;
+			console.log('Chain Id', chainId);
 		} catch (error) {
 			console.log(error);
 		}
@@ -63,6 +70,40 @@
 				walletAddress = accounts[0];
 				console.log(accounts);
 			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	// Function for making transaction on MetaMask wallet
+	async function makeTransaction(): Promise<void> {
+		const metaMaskEth = await detectEthereumProvider();
+		if (!metaMaskEth) {
+			console.log('MetaMask extension not found');
+			return;
+		}
+
+		const transactionParams: { from: string; to: string; value: string }[] = [
+			{
+				from: walletAddress,
+				to: '0x00',
+				value: '0'
+			}
+		];
+
+		try {
+			await metaMaskEth.request({
+				method: 'eth_sendTransaction',
+				params: [
+					{
+						from: walletAddress,
+						to: '0x00',
+						value: '0'
+					}
+				] as { from: string; to: string; value: string }[]
+			});
+			// .then((txHash: string) => console.log(txHash))
+			// .catch((error: any) => console.error(error));
 		} catch (error) {
 			console.log(error);
 		}
