@@ -20,6 +20,7 @@
 
 	// MetaMask wallet connection
 	let walletAddress: string;
+
 	async function connectMetaMaskWallet(): Promise<void> {
 		const metaMaskEth = await detectEthereumProvider();
 		if (!metaMaskEth) {
