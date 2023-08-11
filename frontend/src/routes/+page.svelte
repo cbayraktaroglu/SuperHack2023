@@ -2,8 +2,8 @@
 	import { Progress } from '$lib/store/store';
 	import UploadWidget from './UploadWidget.svelte';
 	import BlckTable from './BLCKTable.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import logo from '$lib/images/Logo.webp';
+	import logo_fallback from '$lib/images/Logo.png';
 
 	// Progress indicator
 	let progress: number;
@@ -17,16 +17,14 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-	</h1>
+<div class="welcome">
+	<picture>
+		<source srcset={logo} type="image/webp" />
+		<img src={logo_fallback} alt="Welcome" />
+	</picture>
+</div>
 
+<section>
 	{#if progress == 0}
 		<UploadWidget />
 	{/if}
@@ -45,23 +43,18 @@
 		flex: 0.6;
 	}
 
-	h1 {
-		width: 100%;
+	.welcome {
+		margin-top: 1vh; /* Adjust the value as needed to control vertical positioning */
+		position: relative;
 	}
 
-	.welcome {
+	.welcome picture {
 		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+		text-align: center;
 	}
 
 	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+		width: 50%;
+		display: inline-block;
 	}
 </style>
