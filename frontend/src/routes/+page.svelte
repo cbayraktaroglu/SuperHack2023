@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Progress } from '$lib/store/store';
-	import UploadWidget from './UploadWidget.svelte';
-	import BlckTable from './BLCKTable.svelte';
+	import FileProcessor from '../lib/components/FileProcessor.svelte';
+	import BlckTable from '../lib/components/BLCKTable.svelte';
 	import logo from '$lib/images/Logo.webp';
 	import logo_fallback from '$lib/images/Logo.png';
-	import HueButton from './HueButton.svelte';
+	import HueButton from '../lib/components/HueButton.svelte';
 	import detectEthereumProvider from '@metamask/detect-provider';
 	import { onMount } from 'svelte';
 	import { Label } from 'flowbite-svelte';
@@ -69,88 +69,6 @@
 			console.log(error);
 		}
 	}
-
-	// Function for making transaction on MetaMask wallet
-	async function makeTransaction(): Promise<void> {
-		const metaMaskEth = await detectEthereumProvider();
-		if (!metaMaskEth) {
-			console.log('MetaMask extension not found');
-			return;
-		}
-
-		const transactionParams = {
-			from: walletAddress,
-			to: '0x00', // Replace with wallet a toddress
-			value: '0'
-		};
-
-		try {
-			const x = (await metaMaskEth.request({
-				method: 'eth_sendTransaction',
-				params: [transactionParams] as any
-			})) as string;
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
-	// Function for getting connected MetaMask wallet and will be called on every page load
-	async function getConnectedMetaMaskWallet(): Promise<void> {
-		const metaMaskEth = await detectEthereumProvider();
-		if (!metaMaskEth) {
-			console.log('MetaMask extension not found');
-			return;
-		}
-		try {
-			const accounts = (await metaMaskEth.request({
-				method: 'eth_accounts',
-				params: []
-			})) as string[];
-			if (accounts.length == 0) {
-				console.log('No accounts found. Please Connect Again!');
-				return;
-			} else {
-				walletAddress = accounts[0];
-				console.log(accounts);
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
-	// Function for making transaction on MetaMask wallet
-	async function makeTransaction(): Promise<void> {
-		const metaMaskEth = await detectEthereumProvider();
-		if (!metaMaskEth) {
-			console.log('MetaMask extension not found');
-			return;
-		}
-
-		const transactionParams: { from: string; to: string; value: string }[] = [
-			{
-				from: walletAddress,
-				to: '0x00',
-				value: '0'
-			}
-		];
-
-		try {
-			await metaMaskEth.request({
-				method: 'eth_sendTransaction',
-				params: [
-					{
-						from: walletAddress,
-						to: '0x00',
-						value: '0'
-					}
-				] as { from: string; to: string; value: string }[]
-			});
-			// .then((txHash: string) => console.log(txHash))
-			// .catch((error: any) => console.error(error));
-		} catch (error) {
-			console.log(error);
-		}
-	}
 </script>
 
 <svelte:head>
@@ -164,16 +82,7 @@
 		<img src={logo_fallback} alt="Welcome" />
 	</picture>
 </div>
-
-	<Label class="p-3">
-		<HueButton
-			buttonText={walletAddress && walletAddress.length > 0
-				? `Connected: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
-				: 'Connect Your Wallet!'}
-			triggerFunction={connectMetaMaskWallet}
-		/>
-	</Label>
-
+<section>
 	<!-- Wallet Connect Button -->
 	<Label class="p-3">
 		<HueButton
@@ -184,18 +93,8 @@
 		/>
 	</Label>
 
-	<!-- Sen Trasaction TEST Button -->
-	<Label class="p-3">
-		<HueButton
-			buttonText={walletAddress && walletAddress.length > 0
-				? `Make Transaction: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
-				: 'Connect Your Wallet First!'}
-			triggerFunction={makeTransaction}
-		/>
-	</Label>
-
 	{#if progress == 0}
-		<UploadWidget />
+		<FileProcessor />
 	{/if}
 
 	{#if progress == 1}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { BlockList } from '$lib/types/EncodeResponse';
-	import { Progress, TheBlockList } from '$lib/store/store';
+	import type { BLCKFile, BlockList } from '$lib/types/EncodeResponse';
+	import { Progress, ProcessedInput, TxList } from '$lib/store/store';
 
 	import {
 		Table,
@@ -14,16 +14,21 @@
 	import { Icon } from 'flowbite-svelte-icons';
 
 	import detectEthereumProvider from '@metamask/detect-provider';
+
 	// Encode endpoint response
-	let blockList: BlockList[];
-	TheBlockList.subscribe((value) => {
-		blockList = value;
+	let blckFile: BLCKFile;
+	ProcessedInput.subscribe((value) => {
+		blckFile = value;
 	});
 
 	let txHasList: string[] = [];
 
 	//TODO duplicated code make it componenent and store wallet address in store as well
-	async function sendBlockData(toAddres: string, valueToSend: string): Promise<void> {
+	async function sendBlockData(
+		toAddres: string,
+		valueToSend: string,
+		fileNum: number
+	): Promise<void> {
 		const metaMaskEth = await detectEthereumProvider();
 		if (!metaMaskEth) {
 			console.log('MetaMask extension not found');
@@ -39,16 +44,23 @@
 		const transactionParams = {
 			from: accounts[0],
 			to: toAddres, // Replace with wallet a toddress
-			value: valueToSend
+			value: 0,
+			data: valueToSend
 		};
 
 		try {
-			const x = (await metaMaskEth.request({
+			const hash = (await metaMaskEth.request({
 				method: 'eth_sendTransaction',
 				params: [transactionParams] as any
 			})) as string;
-			txHasList.push(x);
-			console.log('TxHash added to list!', x);
+
+			// Add the tx hash to the correct place
+			txHasList[fileNum] = hash;
+
+			// Update the global variable store
+			TxList.set(txHasList);
+
+			console.log('TxHash added to list!', hash);
 		} catch (error) {
 			console.log(error);
 		}
@@ -59,27 +71,19 @@
 		return function (event: Event): void {
 			console.log(blck.file_name);
 
-			fetch('http://localhost:3000/data/' + blck.file_name, {
-				method: 'GET'
-			})
-				.then((response) => {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw new Error('Error uploading file: ' + response.statusText);
-					}
-				})
-				.then((serverResponse: any) => {
-					console.log(serverResponse);
-					console.log(serverResponse.Data);
-					//Send each block data to some address
-					//You can change address )
-					sendBlockData('0x0', serverResponse.Data);
-				})
-				.catch((error) => {
-					console.error('Error uploading file :', error);
-				});
+			let blckNumber: number = Number(blck.file_name.charAt(0));
+			let hex: string = arrayBufferToHex(blck.data);
+
+			sendBlockData('0x0000000000000000000000000000000000000000', hex, blckNumber);
 		};
+	}
+
+	function arrayBufferToHex(buffer: Uint8Array): string {
+		let hex = '';
+		for (let i = 0; i < buffer.length; i++) {
+			hex += buffer[i].toString(16).padStart(2, '0');
+		}
+		return hex;
 	}
 </script>
 
@@ -92,12 +96,12 @@
 		</TableHeadCell>
 	</TableHead>
 	<TableBody tableBodyClass="divide-y">
-		{#each blockList as item}
+		{#each blckFile.files as item}
 			<TableBodyRow>
 				<TableBodyCell>{item.file_name}</TableBodyCell>
 				<TableBodyCell>{item.file_size}</TableBodyCell>
 				<TableBodyCell>
-					<Button class="!p-2" on:click={processBLCK(item)}
+					<Button color="dark" class="!p-2" on:click={processBLCK(item)}
 						><Icon name="arrow-right-outline" class="w-5 h-5" /></Button
 					>
 				</TableBodyCell>
