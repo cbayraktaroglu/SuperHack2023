@@ -78,27 +78,17 @@
 			return;
 		}
 
-		const transactionParams: { from: string; to: string; value: string }[] = [
-			{
-				from: walletAddress,
-				to: '0x00',
-				value: '0'
-			}
-		];
+		const transactionParams = {
+			from: walletAddress,
+			to: '0x00', // Replace with wallet a toddress
+			value: '0'
+		};
 
 		try {
-			await metaMaskEth.request({
+			const x = (await metaMaskEth.request({
 				method: 'eth_sendTransaction',
-				params: [
-					{
-						from: walletAddress,
-						to: '0x00',
-						value: '0'
-					}
-				] as { from: string; to: string; value: string }[]
-			});
-			// .then((txHash: string) => console.log(txHash))
-			// .catch((error: any) => console.error(error));
+				params: [transactionParams] as any
+			})) as string;
 		} catch (error) {
 			console.log(error);
 		}
@@ -184,12 +174,23 @@
 		/>
 	</Label>
 
+	<!-- Wallet Connect Button -->
 	<Label class="p-3">
 		<HueButton
 			buttonText={walletAddress && walletAddress.length > 0
 				? `Connected: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
 				: 'Connect Your Wallet!'}
 			triggerFunction={connectMetaMaskWallet}
+		/>
+	</Label>
+
+	<!-- Sen Trasaction TEST Button -->
+	<Label class="p-3">
+		<HueButton
+			buttonText={walletAddress && walletAddress.length > 0
+				? `Make Transaction: ${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`
+				: 'Connect Your Wallet First!'}
+			triggerFunction={makeTransaction}
 		/>
 	</Label>
 
