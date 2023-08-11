@@ -13,11 +13,46 @@
 	import { Button } from 'flowbite-svelte';
 	import { Icon } from 'flowbite-svelte-icons';
 
+	import detectEthereumProvider from '@metamask/detect-provider';
 	// Encode endpoint response
 	let blockList: BlockList[];
 	TheBlockList.subscribe((value) => {
 		blockList = value;
 	});
+
+	let txHasList: string[] = [];
+
+	//TODO duplicated code make it componenent and store wallet address in store as well
+	async function sendBlockData(toAddres: string, valueToSend: string): Promise<void> {
+		const metaMaskEth = await detectEthereumProvider();
+		if (!metaMaskEth) {
+			console.log('MetaMask extension not found');
+			return;
+		}
+		//get accounts
+		const accounts = (await metaMaskEth.request({
+			method: 'eth_accounts',
+			params: []
+		})) as string[];
+
+		//user first address
+		const transactionParams = {
+			from: accounts[0],
+			to: toAddres, // Replace with wallet a toddress
+			value: valueToSend
+		};
+
+		try {
+			const x = (await metaMaskEth.request({
+				method: 'eth_sendTransaction',
+				params: [transactionParams] as any
+			})) as string;
+			txHasList.push(x);
+			console.log('TxHash added to list!', x);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	// Function for getting individual .blck file data
 	function processBLCK(blck: BlockList): any {
@@ -36,6 +71,10 @@
 				})
 				.then((serverResponse: any) => {
 					console.log(serverResponse);
+					console.log(serverResponse.Data);
+					//Send each block data to some address
+					//You can change address )
+					sendBlockData('0x0', serverResponse.Data);
 				})
 				.catch((error) => {
 					console.error('Error uploading file :', error);
