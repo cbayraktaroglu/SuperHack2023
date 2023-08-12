@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { BLCKFile, BLCK } from '$lib/types/BLCKFile';
-	import { Progress, ProcessedInput, FileSHA256Checksum } from '$lib/store/store';
+	import {
+		Progress,
+		ProcessedInput,
+		FileSHA256Checksum,
+		FileName,
+		FileExtension
+	} from '$lib/store/store';
 	import { NumberInput, Fileupload, Label, Helper } from 'flowbite-svelte';
 	import HueButton from '$lib/components/HueButton.svelte';
 	import CryptoJS from 'crypto-js';
@@ -108,6 +114,8 @@
 					// Update the stored variables
 					ProcessedInput.set(result);
 					FileSHA256Checksum.set(result.checksum);
+					FileName.set(selectedFile.name.split('.', 2)[0]);
+					FileExtension.set(selectedFile.name.split('.', 2)[1]);
 					Progress.set(1);
 				})
 				.catch((error) => {

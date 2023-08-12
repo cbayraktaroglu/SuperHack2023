@@ -2,7 +2,14 @@
 	import type { TxInfoContainer } from '$lib/types/SmartContractBridgeData';
 	import type { Factory } from '$lib/types/contracts';
 	import { Label } from 'flowbite-svelte';
-	import { Progress, FileSHA256Checksum, TxList } from '$lib/store/store';
+	import {
+		Progress,
+		FileSHA256Checksum,
+		TxList,
+		FileName,
+		FileExtension,
+		TxHashContainingTheFileCreation
+	} from '$lib/store/store';
 	import { onMount } from 'svelte';
 	import { Factory__factory } from '$lib/types/contracts';
 	import { Button } from 'flowbite-svelte';
@@ -17,6 +24,16 @@
 	let txList: TxInfoContainer[];
 	TxList.subscribe((value) => {
 		txList = value;
+	});
+
+	let nameOfTheFile: string;
+	FileName.subscribe((value) => {
+		nameOfTheFile = value;
+	});
+
+	let extensionOfTheFile: string;
+	FileExtension.subscribe((value) => {
+		extensionOfTheFile = '.' + value;
 	});
 
 	// Blockchain variables
@@ -63,9 +80,10 @@
 			}
 
 			fileFactory
-				.createFile('.gif', 'testus', fileChecksum, txHashes, txChains)
+				.createFile(extensionOfTheFile, nameOfTheFile, fileChecksum, txHashes, txChains)
 				.then((resp) => {
-					console.log(resp.hash);
+					TxHashContainingTheFileCreation.set(resp.hash);
+					Progress.set(3);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -74,7 +92,5 @@
 	}
 </script>
 
-<Label>Now we need to connect this to the smart contract to send all the tx hashes to it</Label>
-<Label>Here is how you can access file checksum: {fileChecksum}</Label>
-<Label>And here is how you can access the tx list containing the txs: {txList}</Label>
-<Button color="dark" class="!p-2" on:click={executeTx}>GO!</Button>
+<Label>To assign an ethereum address to your file press the GO! button</Label>
+<Button color="dark" class="!p-2" size="xl" on:click={executeTx}>GO!</Button>

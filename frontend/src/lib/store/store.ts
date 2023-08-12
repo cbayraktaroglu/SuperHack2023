@@ -14,3 +14,12 @@ export const TxList: Writable<TxInfoContainer[]> = writable();
 
 // For storing the selected file's checksum 
 export const FileSHA256Checksum: Writable<string> = writable();
+
+// For storing the selected file's name 
+export const FileName: Writable<string> = writable();
+
+// For storing the selected file's extension 
+export const FileExtension: Writable<string> = writable();
+
+// For storing the tx hash that contains the file creation event
+export const TxHashContainingTheFileCreation: Writable<string> = writable();
