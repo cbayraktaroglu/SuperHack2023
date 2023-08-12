@@ -40,6 +40,7 @@ export interface KeepItFileInterface extends Interface {
       | "getFileName"
       | "getFileType"
       | "getNumberofTransactions"
+      | "getOrgVerification"
       | "getOwner"
       | "getTransactionAtIndex"
       | "getVerification"
@@ -79,6 +80,10 @@ export interface KeepItFileInterface extends Interface {
     functionFragment: "getNumberofTransactions",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "getOrgVerification",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getOwner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getTransactionAtIndex",
@@ -115,6 +120,10 @@ export interface KeepItFileInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getNumberofTransactions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getOrgVerification",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getOwner", data: BytesLike): Result;
@@ -233,6 +242,8 @@ export interface KeepItFile extends BaseContract {
 
   getNumberofTransactions: TypedContractMethod<[], [bigint], "view">;
 
+  getOrgVerification: TypedContractMethod<[], [boolean], "view">;
+
   getOwner: TypedContractMethod<[], [string], "view">;
 
   getTransactionAtIndex: TypedContractMethod<
@@ -282,6 +293,9 @@ export interface KeepItFile extends BaseContract {
   getFunction(
     nameOrSignature: "getNumberofTransactions"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getOrgVerification"
+  ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
     nameOrSignature: "getOwner"
   ): TypedContractMethod<[], [string], "view">;

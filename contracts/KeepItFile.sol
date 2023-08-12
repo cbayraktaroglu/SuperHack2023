@@ -109,6 +109,10 @@ contract KeepItFile {
         return isVerified;
     }
 
+    function getOrgVerification() external view returns (bool) {
+        return orgVerified;
+    }
+
     // Transfer ownership to a new address
     function transferOwnership(address newOwner) public onlyOwner {
         require(newOwner != address(0), "Invalid new owner address");

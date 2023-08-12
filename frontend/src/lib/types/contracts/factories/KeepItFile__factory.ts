@@ -183,6 +183,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getOrgVerification",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getOwner",
     outputs: [
       {
