@@ -120,7 +120,6 @@ contract KeepItFile {
     }
 
     function checkVerification(
-        IWorldID _worldId,
         string memory _appId,
         string memory _actionId,
         address signal,
@@ -130,13 +129,23 @@ contract KeepItFile {
     ) public onlyOwner {
         require(isVerified == false, "Already verified");
 
+        // Get the latest admin address from the factory
+        KeepItFileFactory factory = KeepItFileFactory(factoryAddress);
+
+        address worldCoinServiceAddress = factory.getWorldCoinServiceAddress();
+        require(
+            worldCoinServiceAddress != address(0),
+            "no WorldCoin service has been defined in the factory"
+        );
+
         uint256 externalNullifier = abi
             .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
             .hashToField();
 
+        WorldCoin wcService = WorldIDRouterImplV1(worldCoinServiceAddress)
         // Check the user from World Coin system
         try
-            _worldId.verifyProof(
+            wcService.verifyProof(
                 root,
                 groupId,
                 abi.encodePacked(signal).hashToField(),
@@ -184,3 +193,5 @@ contract KeepItFile {
         isOrgVerified = true;
     }
 }
+
+//0x515f06B36E6D3b707eAecBdeD18d8B384944c87f optimism goerli

@@ -8,6 +8,7 @@ contract KeepItFileFactory {
     // Addresses
     address private owner;
     address private attestationServiceAddress;
+    address private worldCoinServiceAddress
 
     // Events
     event FileCreated(address fileAddress);
@@ -45,6 +46,14 @@ contract KeepItFileFactory {
 
     function getAttestationServiceAddres() public view returns (address) {
         return attestationServiceAddress;
+    }
+
+    function setWorldCoinServiceAddress(address _aWC) public isOwner {
+        worldCoinServiceAddress = _aWC;
+    }
+
+    function getWorldCoinServiceAddress() public view returns (address) {
+        return worldCoinServiceAddress;
     }
 
     /**
