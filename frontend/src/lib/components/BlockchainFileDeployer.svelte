@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TxInfoContainer } from '$lib/types/SmartContractBridgeData';
+	import type { TxInfoContainer, TxInfoFileJson } from '$lib/types/SmartContractBridgeData';
 	import type { Factory } from '$lib/types/contracts';
 	import { Label } from 'flowbite-svelte';
 	import {
@@ -15,6 +15,8 @@
 	import { Button } from 'flowbite-svelte';
 	import { ethers } from 'ethers';
 
+	import HueButton from './HueButton.svelte';
+	import { downloadTxInfoAsJsonFile } from '$lib/components/DownloadTx';
 	// Subscribe to changes
 	let fileChecksum: string;
 	FileSHA256Checksum.subscribe((value) => {
@@ -90,7 +92,27 @@
 				});
 		}
 	}
+	function createJsonAndDownload(): void {
+		let json = {
+			file_name: nameOfTheFile,
+			file_type: extensionOfTheFile,
+			check_sum: fileChecksum,
+			txInfo: txList
+		} as TxInfoFileJson;
+
+		const fileName: string = nameOfTheFile + '-txhash.json';
+		downloadTxInfoAsJsonFile(json, fileName);
+	}
 </script>
 
-<Label>To assign an ethereum address to your file press the GO! button</Label>
-<Button color="dark" class="!p-2" size="xl" on:click={executeTx}>GO!</Button>
+<div>
+	<div class="grid grid-cols-2 gap-16 content-center py-16">
+		<h4>To assign an ethereum address to your file press the GO!</h4>
+
+		<HueButton buttonText="GO!" triggerFunction={executeTx} />
+
+		<h4>You can dowload transaction information as Json!</h4>
+
+		<HueButton buttonText="Download!" triggerFunction={createJsonAndDownload} />
+	</div>
+</div>
