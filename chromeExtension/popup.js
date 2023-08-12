@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
     var fileInput = document.getElementById('fileInput');
     var uploadButton = document.getElementById('uploadButton');
-    var previewImage = document.getElementById('previewImage');
     uploadButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
         var file, reader;
         var _this = this;
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (file) {
                 reader = new FileReader();
                 reader.onload = function (event) { return __awaiter(_this, void 0, void 0, function () {
-                    var fileContents, uploadedData, response, buffer, mimeTypes, fileEx, fileType, blob, blobUrl, error_1;
+                    var fileContents, uploadedData, response, buffer, mimeTypes, fileEx, fileType, blob, blobUrl, downloadLink, error_1;
                     var _a;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 uploadedData = JSON.parse(fileContents);
                                 _b.label = 1;
                             case 1:
-                                _b.trys.push([1, 7, , 8]);
+                                _b.trys.push([1, 6, , 7]);
                                 return [4 /*yield*/, fetch('http://localhost:3000/decodePrivate', {
                                         method: 'POST',
                                         headers: {
@@ -67,13 +66,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                     })];
                             case 2:
                                 response = _b.sent();
-                                if (!response.ok) return [3 /*break*/, 5];
+                                if (!response.ok) return [3 /*break*/, 4];
                                 return [4 /*yield*/, response.arrayBuffer()];
                             case 3:
                                 buffer = _b.sent();
                                 mimeTypes = {
                                     '.gif': 'image/gif',
                                     '.jpg': 'image/jpeg',
+                                    '.jpeg': 'image/jpeg',
+                                    '.png': 'image/png',
+                                    '.svg': 'image/svg+xml',
+                                    '.pdf': 'application/pdf',
+                                    '.txt': 'text/plain',
+                                    '.json': 'application/json',
+                                    '.html': 'text/html' // HTML file
                                     // Add more mappings as needed
                                 };
                                 fileEx = uploadedData.file_type;
@@ -82,21 +88,28 @@ document.addEventListener('DOMContentLoaded', function () {
                                 blobUrl = URL.createObjectURL(blob);
                                 console.log(blob);
                                 // Display the preview image
-                                return [4 /*yield*/, sleep1(100)];
-                            case 4:
-                                // Display the preview image
-                                _b.sent();
+                                //await sleep(100);
                                 chrome.tabs.create({ url: blobUrl });
-                                return [3 /*break*/, 6];
-                            case 5:
+                                downloadLink = document.createElement('a');
+                                downloadLink.href = blobUrl;
+                                downloadLink.download = uploadedData.file_name;
+                                // Add the link to the document
+                                document.body.appendChild(downloadLink);
+                                // Click the link to trigger the download
+                                downloadLink.click();
+                                // Clean up the Object URL and remove the link from the document
+                                URL.revokeObjectURL(blobUrl);
+                                downloadLink.remove();
+                                return [3 /*break*/, 5];
+                            case 4:
                                 console.error('API request failed:', response.status, response.statusText);
-                                _b.label = 6;
-                            case 6: return [3 /*break*/, 8];
-                            case 7:
+                                _b.label = 5;
+                            case 5: return [3 /*break*/, 7];
+                            case 6:
                                 error_1 = _b.sent();
                                 console.error('Error:', error_1);
-                                return [3 /*break*/, 8];
-                            case 8: return [2 /*return*/];
+                                return [3 /*break*/, 7];
+                            case 7: return [2 /*return*/];
                         }
                     });
                 }); };
@@ -106,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }); });
 });
-function sleep1(ms) {
+function sleep(ms) {
     return new Promise(function (resolve) {
         setTimeout(resolve, ms);
     });

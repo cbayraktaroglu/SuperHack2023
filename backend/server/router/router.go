@@ -25,15 +25,44 @@ func New() *gin.Engine {
 	}))
 
 	endpointMap := map[int]string{
-		blckDecoder.OP_MAINNET:     "https://polygon-mumbai-infura.wallet.coinbase.com",
-		blckDecoder.OP_GOERLI:      "https://polygon-mumbai-infura.wallet.coinbase.com",
+
+		//OPTIMISM
+		blckDecoder.OP_MAINNET: "https://rpc.ankr.com/optimism",
+		blckDecoder.OP_GOERLI:  "https://goerli.optimism.io",
+
+		//BASE
+		blckDecoder.BASE_MAINNET: "https://base.blockpi.network/v1/rpc/public",
+		blckDecoder.BASE_GOERLI:  "https://base-goerli.blockpi.network/v1/rpc/public",
+
+		//MODE
+		blckDecoder.MODE_TESTNET: "https://sepolia.mode.network",
+
+		//ZORA
+		blckDecoder.ZORA_MAINNET: "https://rpc.zora.energy",
+		blckDecoder.ZORA_TESTNET: "https://testnet.rpc.zora.co/",
+
+		//POLYGON
 		blckDecoder.POLYGON_MUMBAI: "https://polygon-mumbai-infura.wallet.coinbase.com",
 	}
 
 	chainNameMap := map[string]int{
-		"optimism": blckDecoder.OP_MAINNET,
-		"goerli":   blckDecoder.OP_GOERLI,
-		"polygon":  blckDecoder.POLYGON_MUMBAI,
+		//OPTIMISM
+		"optimism_mainnet": blckDecoder.OP_MAINNET,
+		"optimism_goerli":  blckDecoder.OP_GOERLI,
+
+		//BASE
+		"base_mainnet": blckDecoder.BASE_MAINNET,
+		"base_goerli":  blckDecoder.BASE_GOERLI,
+
+		//MODE
+		"mode_testnet": blckDecoder.MODE_TESTNET,
+
+		//ZORA
+		"zora_mainnet": blckDecoder.ZORA_MAINNET,
+		"zora_testnet": blckDecoder.ZORA_TESTNET,
+
+		//POLYGON
+		"polygon_mumbai": blckDecoder.POLYGON_MUMBAI,
 	}
 
 	decoder := blckDecoder.NewBLCKDecoder(endpointMap, chainNameMap)

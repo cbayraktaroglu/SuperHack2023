@@ -48,8 +48,8 @@ func PrivHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 		}
 
 		//Check Checksum
-		modifiedBuffer := returnBuffer[:len(returnBuffer)-1]
-		checkSum, err := decoder.GetFileCheckSumSHA256(modifiedBuffer)
+		//modifiedBuffer := returnBuffer[:len(returnBuffer)-1]
+		checkSum, err := decoder.GetFileCheckSumSHA256(returnBuffer)
 		if err != nil {
 			responses.FailResponse(c, http.StatusBadRequest)
 			log.Println("Unable to get GetFileCheckSumSHA256: ", err)
@@ -62,10 +62,10 @@ func PrivHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 		}
 
 		log.Println("success")
-		log.Println(modifiedBuffer)
+		log.Println(returnBuffer)
 		// Base64 encode the binary data
 		//encodedData := base64.StdEncoding.EncodeToString(modifiedBuffer)
-		responses.SuccessResponse(c, modifiedBuffer)
+		responses.SuccessResponseAsByteArray(c, returnBuffer)
 	}
 }
 
@@ -143,8 +143,8 @@ func PublicHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 		}
 
 		//Check checksum
-		modifiedBuffer := returnBuffer[:len(returnBuffer)-1]
-		checkSum, err := decoder.GetFileCheckSumSHA256(modifiedBuffer)
+		//modifiedBuffer := returnBuffer[:len(returnBuffer)-1]
+		checkSum, err := decoder.GetFileCheckSumSHA256(returnBuffer)
 		if err != nil {
 			responses.FailResponse(c, http.StatusBadRequest)
 			log.Println("Unable to get GetFileCheckSumSHA256: ", err)
@@ -157,10 +157,10 @@ func PublicHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 		}
 
 		info := decodeStructs.PublicInfo{}
-		info.ReturnBuffer = modifiedBuffer
+		info.ReturnBuffer = returnBuffer
 		info.FileName = completeFileName
 
-		responses.SuccessResponse(c, info)
+		responses.SuccessResponseAsByteArray(c, info)
 	}
 }
 

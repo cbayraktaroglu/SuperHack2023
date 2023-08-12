@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     const uploadButton = document.getElementById('uploadButton') as HTMLButtonElement;
-    const previewImage = document.getElementById('previewImage') as HTMLImageElement;
 
     uploadButton.addEventListener('click', async () => {
         const file = fileInput.files?.[0];
@@ -31,6 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         const mimeTypes: Record<string, string> = {
                             '.gif': 'image/gif',
                             '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.svg': 'image/svg+xml',
+                            '.pdf': 'application/pdf',
+                            '.txt': 'text/plain',
+                            '.json': 'application/json',
+                            '.html': 'text/html' // HTML file
                             // Add more mappings as needed
                         };
 
@@ -45,12 +51,29 @@ document.addEventListener('DOMContentLoaded', function () {
                         //const blob = new Blob([buffer], { type: 'image/gif' });
                         const blob = new Blob([buffer], { type: fileType});
                         const blobUrl = URL.createObjectURL(blob);
+
+
                         console.log(blob);
 
                         // Display the preview image
-                        await sleep(100);
+                        //await sleep(100);
 
                         chrome.tabs.create({ url: blobUrl });
+
+                        // Create a link element for downloading
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = blobUrl;
+                        downloadLink.download = uploadedData.file_name;
+
+                        // Add the link to the document
+                        document.body.appendChild(downloadLink);
+
+                        // Click the link to trigger the download
+                        downloadLink.click();
+
+                        // Clean up the Object URL and remove the link from the document
+                        URL.revokeObjectURL(blobUrl);
+                        downloadLink.remove();
                     } else {
                         console.error('API request failed:', response.status, response.statusText);
                     }

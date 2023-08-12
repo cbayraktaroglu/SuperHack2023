@@ -8,14 +8,19 @@ import (
 )
 
 // Creates a response with given message and data
-func SuccessResponse(c *gin.Context, data interface{}) {
+func SuccessResponseAsByteArray(c *gin.Context, data interface{}) {
 	log.Println(reflect.TypeOf(data))
 	if byteArray, ok := data.([]byte); ok {
 		c.Writer.WriteHeader(http.StatusOK)
 		c.Writer.Write(byteArray)
 	}
 
-	//c.JSON(http.StatusOK, map[string]interface{}{"Status": true, "Data": data})
+}
+
+// Creates a response with given message and data
+func SuccessResponse(c *gin.Context, data interface{}) {
+
+	c.JSON(http.StatusOK, map[string]interface{}{"Status": true, "Data": data})
 
 }
 
