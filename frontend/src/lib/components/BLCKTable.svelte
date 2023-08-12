@@ -78,6 +78,8 @@
 			// Update the global variable store
 			TxList.set(txHasList);
 
+			console.log(fileNum + '.blck has been processed');
+
 			isProcessed[fileNum + '.blck'] = true;
 			numberOfProcessed = numberOfProcessed + 1;
 
@@ -92,7 +94,7 @@
 		return function (event: Event): void {
 			console.log(blck.file_name);
 
-			let blckNumber: number = Number(blck.file_name.charAt(0));
+			let blckNumber: number = Number(blck.file_name.split('.', 1)[0]);
 			let hex: string = arrayBufferToHex(blck.data);
 
 			sendBlockData('0x0000000000000000000000000000000000000000', hex, blckNumber);

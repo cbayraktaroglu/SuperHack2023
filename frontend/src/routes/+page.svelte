@@ -2,13 +2,14 @@
 	import { Progress } from '$lib/store/store';
 	import FileProcessor from '../lib/components/FileProcessor.svelte';
 	import BlckTable from '../lib/components/BLCKTable.svelte';
-	import SmartContractBridge from '$lib/components/SmartContractBridge.svelte';
+	import BlockchainFileDeployer from '$lib/components/BlockchainFileDeployer.svelte';
 	import logo from '$lib/images/Logo.webp';
 	import logo_fallback from '$lib/images/Logo.png';
 	import HueButton from '../lib/components/HueButton.svelte';
 	import detectEthereumProvider from '@metamask/detect-provider';
 	import { onMount } from 'svelte';
 	import { Label } from 'flowbite-svelte';
+	import BlockchainFileVerifier from '$lib/components/BlockchainFileVerifier.svelte';
 	// Progress indicator
 	let progress: number;
 	Progress.subscribe((value) => {
@@ -103,7 +104,11 @@
 	{/if}
 
 	{#if progress == 2}
-		<SmartContractBridge />
+		<BlockchainFileDeployer />
+	{/if}
+
+	{#if progress == 3}
+		<BlockchainFileVerifier />
 	{/if}
 </section>
 

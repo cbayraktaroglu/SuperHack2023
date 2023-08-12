@@ -1,0 +1,67 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "fileAddress",
+				"type": "address"
+			}
+		],
+		"name": "FileCreated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fileType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_fileName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_fileCheckSum",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_transactionList",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_chainIdList",
+				"type": "string[]"
+			}
+		],
+		"name": "createFile",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "getFiles",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
