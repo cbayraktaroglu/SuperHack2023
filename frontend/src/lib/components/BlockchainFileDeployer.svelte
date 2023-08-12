@@ -2,7 +2,7 @@
 	import type { TxInfoContainer, TxInfoFileJson } from '$lib/types/SmartContractBridgeData';
 	import type { KeepItFileFactory } from '$lib/types/contracts';
 	import { KeepItFileFactory__factory } from '$lib/types/contracts';
-	import { Label } from 'flowbite-svelte';
+
 	import {
 		Progress,
 		FileSHA256Checksum,
@@ -12,8 +12,6 @@
 		TxHashContainingTheFileCreation
 	} from '$lib/store/store';
 	import { onMount } from 'svelte';
-
-	import { Button } from 'flowbite-svelte';
 	import { ethers } from 'ethers';
 
 	import HueButton from './HueButton.svelte';
