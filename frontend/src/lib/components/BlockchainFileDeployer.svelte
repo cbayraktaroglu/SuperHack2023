@@ -77,8 +77,8 @@
 			let txChains: string[] = [];
 
 			for (let i = 0; i < txList.length; i++) {
-				txHashes.push(txList[i].txHash);
-				txChains.push('' + txList[i].txChainID);
+				txHashes.push(txList[i].tx_hash);
+				txChains.push('' + txList[i].chain_ID);
 			}
 
 			fileFactory
@@ -97,7 +97,7 @@
 			file_name: nameOfTheFile,
 			file_type: extensionOfTheFile,
 			check_sum: fileChecksum,
-			txInfo: txList
+			tx_info: txList
 		} as TxInfoFileJson;
 
 		const fileName: string = nameOfTheFile + '-txhash.json';

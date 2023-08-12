@@ -73,7 +73,7 @@
 			});
 
 			// Add the tx hash to the correct place
-			txHasList[fileNum] = { txHash: hash, txChainID: parseInt(chainID, 16) };
+			txHasList[fileNum] = { tx_hash: hash, chain_ID: parseInt(chainID, 16) };
 
 			// Update the global variable store
 			TxList.set(txHasList);
