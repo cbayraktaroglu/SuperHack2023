@@ -79,7 +79,7 @@
 </svelte:head>
 
 <div class="welcome">
-	<picture class="p-8">
+	<picture class="p-20">
 		<source srcset={logo} type="image/webp" />
 		<img src={logo_fallback} alt="Welcome" />
 	</picture>
@@ -132,7 +132,7 @@
 	}
 
 	.welcome img {
-		width: 40%;
+		width: 100%;
 		display: inline-block;
 	}
 </style>
