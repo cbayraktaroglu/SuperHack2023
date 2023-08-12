@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { BLCKFile, BlockList } from '$lib/types/EncodeResponse';
-	import { Progress, ProcessedInput } from '$lib/store/store';
+	import type { BLCKFile, BLCK } from '$lib/types/BLCKFile';
+	import { Progress, ProcessedInput, FileSHA256Checksum } from '$lib/store/store';
 	import { NumberInput, Fileupload, Label, Helper } from 'flowbite-svelte';
 	import HueButton from '$lib/components/HueButton.svelte';
 	import CryptoJS from 'crypto-js';
@@ -49,7 +49,7 @@
 					console.log('Last file size: ' + lastFileSize);
 					console.log('Number of files: ' + numberOfFiles);
 
-					var blockList: BlockList[] = [];
+					var blockList: BLCK[] = [];
 
 					for (let i = 0; i < numberOfFiles + 1; i++) {
 						let upperLimit = value;
@@ -60,7 +60,7 @@
 
 						let buffer = new Uint8Array(reader.result as ArrayBuffer, i * value, upperLimit);
 
-						let item: BlockList = {
+						let item: BLCK = {
 							file_name: i + '.blck',
 							file_size: buffer.length,
 							data: buffer
@@ -92,6 +92,7 @@
 		});
 	};
 
+	// File handler
 	function handleFile(event: Event): void {
 		if (selectedFile) {
 			// Sanity check
@@ -106,6 +107,7 @@
 
 					// Update the stored variables
 					ProcessedInput.set(result);
+					FileSHA256Checksum.set(result.checksum);
 					Progress.set(1);
 				})
 				.catch((error) => {

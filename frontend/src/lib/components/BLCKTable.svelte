@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BLCKFile, BlockList } from '$lib/types/EncodeResponse';
+	import type { BLCKFile, BLCK } from '$lib/types/BLCKFile';
 	import { Progress, ProcessedInput, TxList } from '$lib/store/store';
 
 	import {
@@ -14,14 +14,15 @@
 	import { Icon } from 'flowbite-svelte-icons';
 
 	import detectEthereumProvider from '@metamask/detect-provider';
+	import type { TxInfoContainer } from '$lib/types/SmartContractBridgeData';
 
-	// Encode endpoint response
+	// Parsed file
 	let blckFile: BLCKFile;
 	ProcessedInput.subscribe((value) => {
 		blckFile = value;
 	});
 
-	let txHasList: string[] = [];
+	let txHasList: TxInfoContainer[] = [];
 
 	// To keep track of the processed .blck files
 	let isProcessed: { [key: string]: boolean } = {};
@@ -42,13 +43,13 @@
 		valueToSend: string,
 		fileNum: number
 	): Promise<void> {
-		const metaMaskEth = await detectEthereumProvider();
-		if (!metaMaskEth) {
+		const blockchainProvider = await detectEthereumProvider();
+		if (!blockchainProvider) {
 			console.log('MetaMask extension not found');
 			return;
 		}
 		//get accounts
-		const accounts = (await metaMaskEth.request({
+		const accounts = (await blockchainProvider.request({
 			method: 'eth_accounts',
 			params: []
 		})) as string[];
@@ -62,13 +63,17 @@
 		};
 
 		try {
-			const hash = (await metaMaskEth.request({
+			const hash = (await blockchainProvider.request({
 				method: 'eth_sendTransaction',
 				params: [transactionParams] as any
 			})) as string;
 
+			const chainID = await blockchainProvider.request({
+				method: 'eth_chainId'
+			});
+
 			// Add the tx hash to the correct place
-			txHasList[fileNum] = hash;
+			txHasList[fileNum] = { txHash: hash, txChainID: parseInt(chainID, 16) };
 
 			// Update the global variable store
 			TxList.set(txHasList);
@@ -83,7 +88,7 @@
 	}
 
 	// Function for getting individual .blck file data
-	function processBLCK(blck: BlockList): any {
+	function processBLCK(blck: BLCK): any {
 		return function (event: Event): void {
 			console.log(blck.file_name);
 
@@ -99,6 +104,7 @@
 		for (let i = 0; i < buffer.length; i++) {
 			hex += buffer[i].toString(16).padStart(2, '0');
 		}
+
 		return hex;
 	}
 </script>
