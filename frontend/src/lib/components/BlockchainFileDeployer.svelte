@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { TxInfoContainer, TxInfoFileJson } from '$lib/types/SmartContractBridgeData';
-	import type { Factory } from '$lib/types/contracts';
+	import type { KeepItFileFactory } from '$lib/types/contracts';
+	import { KeepItFileFactory__factory } from '$lib/types/contracts';
 	import { Label } from 'flowbite-svelte';
 	import {
 		Progress,
@@ -11,7 +12,7 @@
 		TxHashContainingTheFileCreation
 	} from '$lib/store/store';
 	import { onMount } from 'svelte';
-	import { Factory__factory } from '$lib/types/contracts';
+
 	import { Button } from 'flowbite-svelte';
 	import { ethers } from 'ethers';
 
@@ -40,7 +41,7 @@
 
 	// Blockchain variables
 	let provider: ethers.BrowserProvider;
-	let fileFactory: Factory;
+	let fileFactory: KeepItFileFactory;
 	let signer: ethers.JsonRpcSigner;
 
 	// run the function onMount to set everything
@@ -58,7 +59,7 @@
 				signer = await provider.getSigner();
 
 				// Get the contract
-				fileFactory = Factory__factory.connect(
+				fileFactory = KeepItFileFactory__factory.connect(
 					'0xcf58de8eccc3a54cc1c58f5932dadba5e1483fdb',
 					signer
 				);
