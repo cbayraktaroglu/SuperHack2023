@@ -1,9 +1,14 @@
 package blckDecoder
 
 import (
+	file "SuperHack2023/server/api/decode/contracts"
 	"bufio"
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"errors"
+	"io"
 	"os"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -11,12 +16,14 @@ import (
 )
 
 type BLCKDecoder struct {
-	nodeLookup map[int]string
+	nodeLookup      map[int]string
+	chainNameLookup map[string]int
 }
 
-func NewBLCKDecoder(chainIDmap map[int]string) (decoder *BLCKDecoder) {
+func NewBLCKDecoder(chainIDmap map[int]string, chainNameMap map[string]int) (decoder *BLCKDecoder) {
 	decoder = &BLCKDecoder{
-		nodeLookup: chainIDmap,
+		nodeLookup:      chainIDmap,
+		chainNameLookup: chainNameMap,
 	}
 	return
 }
@@ -64,6 +71,46 @@ func (blckDcdr *BLCKDecoder) BytesToFile(data []byte, outputFilePath string) (er
 	}
 
 	err = writer.Flush()
+
+	return
+}
+
+func (blckDcdr *BLCKDecoder) GetFileContractInstance(scAddress string, chainName string) (caller *file.BlockchainFileCaller, err error) {
+
+	chainID, isOk := blckDcdr.chainNameLookup[chainName]
+
+	if !isOk {
+		err = errors.New("no node endpoint has been registered for the given chainID")
+		return
+	}
+
+	nodeEndpoint, isOk := blckDcdr.nodeLookup[chainID]
+
+	if !isOk {
+		err = errors.New("no node endpoint has been registered for the given chainID")
+		return
+	}
+
+	blockchainClient, err := ethclient.Dial(nodeEndpoint)
+
+	caller, err = file.NewBlockchainFileCaller(common.HexToAddress(scAddress), blockchainClient)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (blckEncd *BLCKDecoder) GetFileCheckSumSHA256(fileBuffer []byte) (checksum string, err error) {
+
+	hash := sha256.New()
+
+	_, err = io.Copy(hash, bytes.NewBuffer(fileBuffer))
+
+	if err != nil {
+		return
+	}
+
+	checksum = hex.EncodeToString(hash.Sum(nil))
 
 	return
 }
