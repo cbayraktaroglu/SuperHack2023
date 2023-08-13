@@ -37,6 +37,7 @@
 				// Request account access
 				await window.ethereum.request({ method: 'eth_requestAccounts' });
 
+				signer = await provider.getSigner();
 				const topicAddres: string =
 					'0x31a209c0c6a6a197b980906ee1598da098dcdcb051bf49abbc4a935702c0a603';
 
@@ -55,7 +56,12 @@
 				});
 
 				console.log('found', found);
-				const foundContractAdress: string = found['topics'][0];
+				const foundContractAdressHex: string = found['data'];
+
+				console.log('foundContractAdress', foundContractAdressHex);
+				console.log('found', foundContractAdressHex.slice(26));
+
+				const foundContractAdress: string = '0x' + foundContractAdressHex.slice(26);
 				console.log('foundContractAdress', foundContractAdress);
 
 				// Get the contract
@@ -63,8 +69,10 @@
 
 				// // get event id from the transaction and call the verify function
 
-				// // Call the verify function with enteredUid 
-				await keepItFile.orgVerify(enteredUid);
+				// // Call the verify function with enteredUid
+
+				const orgResponse: any = await keepItFile.orgVerify(enteredUid);
+				console.log('orgResponse', orgResponse);
 			} catch (error) {
 				console.error('User rejected the request:', error);
 			}
@@ -77,15 +85,16 @@
 <div>
 	<h1>Verify File</h1>
 
-	<div class="p-12 grid grid-cols-2 gap-x-16 content-center">
-		<div class="col-span-1">
+	<div class="p-12 grid grid-cols-2 gap-x-16 content-center gap-8">
+		<div class="col-span-2">
 			<react:WorldIdWidget />
 		</div>
-		<div class="col-span-1">
-			<button class="verify-org" on:click={verifyFileWithOrg}> Verify with Org !</button>
+		<div class="col-span-1 rounded-2xl">
+			<Label>Enter the UID</Label>
+			<Input bind:enteredUid class="p-10px 20px rounded-2xl" />
 		</div>
-		<div>
-			<Input bind:enteredUid />
+		<div class="col-span-1 pt-4">
+			<button class="verify-org" on:click={verifyFileWithOrg}> Verify with Org !</button>
 		</div>
 	</div>
 
