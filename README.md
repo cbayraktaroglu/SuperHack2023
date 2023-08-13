@@ -37,17 +37,20 @@ Introducing keepIt: a cutting-edge file storage protocol that empowers users to 
 
 The following contracts have been deployed for different networks:
 
-- **Optimism Goerli**: `0xcf91A26C978c33fCe244412cBcb602C63F749A8b`
-  - Status: Full ready for use.
-
 - **Base Goerli**: `0xfbBc9950cB64912EDd88bCf47f6D85957C2aBcd0`
   - Status: Full ready for use.
+ 
+- **Mode Sepholia**: `0xA4575B1d61AA4fE963373e8FD535427205B91135`
+  - Status: Ready, but without Ethereum Attestation Service (EAS) since EAS is not supported on this chain.
+
+- **Optimism Goerli**: `0xcf91A26C978c33fCe244412cBcb602C63F749A8b`
+  - Status: Full ready for use.
+    
+- **Polygon Mumbai**: `0xce2dA00922faf10dd5bE5229666691eB28FcB75D`
+  - Status: Ready, but without Ethereum Attestation Service (EAS) since EAS is not supported on this chain.
 
 - **Zora Goerli**: `0xfbBc9950cB64912EDd88bCf47f6D85957C2aBcd0`
   - Status: Ready, but without any verification. Worldcoin and Ethereum Attestation Service (EAS) are not supported on this chain.
-
-- **Polygon Mumbai**: `0xce2dA00922faf10dd5bE5229666691eB28FcB75D`
-  - Status: Ready, but without Ethereum Attestation Service (EAS) since EAS is not supported on this chain.
 
 
 ## Project Structure
