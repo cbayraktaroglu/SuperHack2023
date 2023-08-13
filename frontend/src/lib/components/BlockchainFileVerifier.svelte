@@ -26,9 +26,9 @@
 
 	let enteredUid: string;
 	// // run the function onMount to set everything
-	// onMount(async () => {
-	// 	await initializeTheContract();
-	// });
+	onMount(async () => {
+		await verifyFileWithOrg();
+	});
 
 	async function verifyFileWithOrg(): Promise<void> {
 		if (typeof window.ethereum !== 'undefined') {
@@ -67,8 +67,9 @@
 				// Get the contract
 				keepItFile = KeepItFile__factory.connect(foundContractAdress, signer);
 
+				console.log('keepItFile', keepItFile);
 				// // get event id from the transaction and call the verify function
-
+				console.log('enteredUid', enteredUid);
 				// // Call the verify function with enteredUid
 
 				const orgResponse: any = await keepItFile.orgVerify(enteredUid);
@@ -91,7 +92,7 @@
 		</div>
 		<div class="col-span-1 rounded-2xl">
 			<Label>Enter the UID</Label>
-			<Input bind:enteredUid class="p-10px 20px rounded-2xl" />
+			<input type="text" bind:value={enteredUid} class="p-10px 20px rounded-2xl" />
 		</div>
 		<div class="col-span-1 pt-4">
 			<button class="verify-org" on:click={verifyFileWithOrg}> Verify with Org !</button>
