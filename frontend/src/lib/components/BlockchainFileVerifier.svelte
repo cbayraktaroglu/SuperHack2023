@@ -30,7 +30,55 @@
 	// // run the function onMount to set everything
 	onMount(async () => {
 		await verifyFileWithOrg();
+		await getFileInfo();
 	});
+
+	async function getFileInfo(): Promise<void> {
+		if (typeof window.ethereum !== 'undefined') {
+			provider = new ethers.BrowserProvider(window.ethereum);
+			try {
+				// Request account access
+				await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+				signer = await provider.getSigner();
+				const topicAddres: string =
+					'0x31a209c0c6a6a197b980906ee1598da098dcdcb051bf49abbc4a935702c0a603';
+
+				const transactionReceipt = await provider.getTransactionReceipt(targetTX);
+
+				if (!transactionReceipt) {
+					console.log('transactionReceipt not found');
+					return;
+				}
+				console.log('transactionReceipt', transactionReceipt);
+
+				const found: any = transactionReceipt['logs'].find((log) => {
+					return log['topics'].find((topic) => {
+						return topic === topicAddres;
+					});
+				});
+
+				console.log('found', found);
+				const foundContractAdressHex: string = found['data'];
+
+				console.log('foundContractAdress', foundContractAdressHex);
+				console.log('found', foundContractAdressHex.slice(26));
+
+				const foundContractAdress: string = '0x' + foundContractAdressHex.slice(26);
+				console.log('foundContractAdress', foundContractAdress);
+				fileAddress = foundContractAdress;
+				// Get the contract
+			} catch (error) {
+				console.error('User rejected the request:', error);
+			}
+		} else {
+			console.error('Wallet is not installed!');
+		}
+	}
+
+	setInterval(async () => {
+		await getFileInfo();
+	}, 100);
 
 	async function verifyFileWithOrg(): Promise<void> {
 		if (typeof window.ethereum !== 'undefined') {
