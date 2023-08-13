@@ -24,6 +24,8 @@
 
 	let keepItFile: KeepItFile;
 
+	let fileAddress: string = '';
+
 	let enteredUid: string;
 	// // run the function onMount to set everything
 	onMount(async () => {
@@ -63,7 +65,7 @@
 
 				const foundContractAdress: string = '0x' + foundContractAdressHex.slice(26);
 				console.log('foundContractAdress', foundContractAdress);
-
+				fileAddress = foundContractAdress;
 				// Get the contract
 				keepItFile = KeepItFile__factory.connect(foundContractAdress, signer);
 
@@ -85,6 +87,9 @@
 
 <div>
 	<h1>Verify File</h1>
+	<div class="col-start-2 col-span-3 p-4">
+		<h2>File Adress {fileAddress}</h2>
+	</div>
 
 	<div class="p-12 grid grid-cols-2 gap-x-16 content-center gap-8">
 		<div class="col-start-1 col-span-3">
