@@ -2,9 +2,7 @@ package router
 
 import (
 	blckDecoder "SuperHack2023/decoder"
-	"SuperHack2023/server/api/data"
 	"SuperHack2023/server/api/decode"
-	"SuperHack2023/server/api/encode"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -68,8 +66,8 @@ func New() *gin.Engine {
 	decoder := blckDecoder.NewBLCKDecoder(endpointMap, chainNameMap)
 
 	// Endpoints
-	router.POST("/encode", encode.Handler())
-	router.GET("/data/:fileName", data.Handler())
+	//router.POST("/encode", encode.Handler())
+	//router.GET("/data/:fileName", data.Handler())
 	router.POST("/decodePrivate", decode.PrivHandler(decoder))
 	router.POST("/decodePublic/:address/:chainName", decode.PublicHandler(decoder))
 
