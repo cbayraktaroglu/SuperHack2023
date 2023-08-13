@@ -23,9 +23,6 @@ contract KeepItFile {
     bool internal isVerified;
     bool internal isOrgVerified;
 
-    /// @dev The World ID group ID (always 1)
-    uint256 internal immutable groupId = 1;
-
     struct FileParts {
         string chainID;
         string transactionHash;
@@ -110,7 +107,7 @@ contract KeepItFile {
     }
 
     function getOrgVerification() external view returns (bool) {
-        return orgVerified;
+        return isOrgVerified;
     }
 
     // Transfer ownership to a new address
@@ -142,12 +139,11 @@ contract KeepItFile {
             .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
             .hashToField();
 
-        WorldCoin wcService = WorldIDRouterImplV1(worldCoinServiceAddress)
+        IWorldID wcService = IWorldID(worldCoinServiceAddress);
         // Check the user from World Coin system
         try
             wcService.verifyProof(
                 root,
-                groupId,
                 abi.encodePacked(signal).hashToField(),
                 nullifierHash,
                 externalNullifier,
@@ -193,5 +189,3 @@ contract KeepItFile {
         isOrgVerified = true;
     }
 }
-
-//0x515f06B36E6D3b707eAecBdeD18d8B384944c87f optimism goerli

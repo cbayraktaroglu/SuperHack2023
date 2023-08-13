@@ -8,7 +8,7 @@ contract KeepItFileFactory {
     // Addresses
     address private owner;
     address private attestationServiceAddress;
-    address private worldCoinServiceAddress
+    address private worldCoinServiceAddress;
 
     // Events
     event FileCreated(address fileAddress);

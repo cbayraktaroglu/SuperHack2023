@@ -30,7 +30,9 @@ export interface KeepItFileFactoryInterface extends Interface {
       | "getAttestationServiceAddres"
       | "getFiles"
       | "getOwner"
+      | "getWorldCoinServiceAddress"
       | "setAttestationServiceAddress"
+      | "setWorldCoinServiceAddress"
   ): FunctionFragment;
 
   getEvent(nameOrSignatureOrTopic: "FileCreated" | "OwnerSet"): EventFragment;
@@ -53,7 +55,15 @@ export interface KeepItFileFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "getOwner", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "getWorldCoinServiceAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "setAttestationServiceAddress",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setWorldCoinServiceAddress",
     values: [AddressLike]
   ): string;
 
@@ -69,7 +79,15 @@ export interface KeepItFileFactoryInterface extends Interface {
   decodeFunctionResult(functionFragment: "getFiles", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getOwner", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "getWorldCoinServiceAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setAttestationServiceAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setWorldCoinServiceAddress",
     data: BytesLike
   ): Result;
 }
@@ -166,8 +184,16 @@ export interface KeepItFileFactory extends BaseContract {
 
   getOwner: TypedContractMethod<[], [string], "view">;
 
+  getWorldCoinServiceAddress: TypedContractMethod<[], [string], "view">;
+
   setAttestationServiceAddress: TypedContractMethod<
     [_aSA: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setWorldCoinServiceAddress: TypedContractMethod<
+    [_aWC: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -202,8 +228,14 @@ export interface KeepItFileFactory extends BaseContract {
     nameOrSignature: "getOwner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "getWorldCoinServiceAddress"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "setAttestationServiceAddress"
   ): TypedContractMethod<[_aSA: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setWorldCoinServiceAddress"
+  ): TypedContractMethod<[_aWC: AddressLike], [void], "nonpayable">;
 
   getEvent(
     key: "FileCreated"

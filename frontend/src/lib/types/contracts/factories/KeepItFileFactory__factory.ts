@@ -138,6 +138,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getWorldCoinServiceAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -146,6 +159,19 @@ const _abi = [
       },
     ],
     name: "setAttestationServiceAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_aWC",
+        type: "address",
+      },
+    ],
+    name: "setWorldCoinServiceAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

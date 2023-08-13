@@ -55,7 +55,6 @@ export interface KeepItFileInterface extends Interface {
   encodeFunctionData(
     functionFragment: "checkVerification",
     values: [
-      AddressLike,
       string,
       string,
       AddressLike,
@@ -222,7 +221,6 @@ export interface KeepItFile extends BaseContract {
 
   checkVerification: TypedContractMethod<
     [
-      _worldId: AddressLike,
       _appId: string,
       _actionId: string,
       signal: AddressLike,
@@ -270,7 +268,6 @@ export interface KeepItFile extends BaseContract {
     nameOrSignature: "checkVerification"
   ): TypedContractMethod<
     [
-      _worldId: AddressLike,
       _appId: string,
       _actionId: string,
       signal: AddressLike,

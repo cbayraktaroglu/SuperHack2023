@@ -89,11 +89,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "contract IWorldID",
-        name: "_worldId",
-        type: "address",
-      },
-      {
         internalType: "string",
         name: "_appId",
         type: "string",
