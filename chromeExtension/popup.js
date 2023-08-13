@@ -37,8 +37,99 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 document.addEventListener('DOMContentLoaded', function () {
     var _this = this;
     var fileInput = document.getElementById('fileInput');
-    var uploadButton = document.getElementById('uploadButton');
-    uploadButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+    var uploadPrivate = document.getElementById('uploadPrivate');
+    var privateInputs = document.getElementById('privateInputs');
+    var publicView = document.getElementById('publicView');
+    var privateView = document.getElementById('privateView');
+    var publicInputs = document.getElementById('publicInputs');
+    var publicDropdown = document.getElementById('publicDropdown');
+    var submitPublicButton = document.getElementById('submitPublic');
+    //Public view handler
+    submitPublicButton.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
+        var contractAddressInput, publicDropdownValue, query, response, jsonResponse, mimeTypes, returnBuffer, returnBufferBytes, fileName, fileExtension, status_1, fileType, blob, blobUrl, downloadLink, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    contractAddressInput = document.getElementById('contractAddress');
+                    publicDropdownValue = publicDropdown.value;
+                    console.log('Public Input:', contractAddressInput.value);
+                    console.log('Public Dropdown:', publicDropdownValue);
+                    query = contractAddressInput.value + "/" + publicDropdownValue;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 6, , 7]);
+                    return [4 /*yield*/, fetch('http://localhost:3000/decodePublic/' + query, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        })];
+                case 2:
+                    response = _a.sent();
+                    if (!response.ok) return [3 /*break*/, 4];
+                    return [4 /*yield*/, response.json()];
+                case 3:
+                    jsonResponse = _a.sent();
+                    mimeTypes = {
+                        '.gif': 'image/gif',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.png': 'image/png',
+                        '.svg': 'image/svg+xml',
+                        '.pdf': 'application/pdf',
+                        '.txt': 'text/plain',
+                        '.json': 'application/json',
+                        '.html': 'text/html' // HTML file
+                        // Add more mappings as needed
+                    };
+                    returnBuffer = jsonResponse.Data.return_buffer;
+                    returnBufferBytes = new Uint8Array(atob(returnBuffer).split('').map(function (char) { return char.charCodeAt(0); }));
+                    fileName = jsonResponse.Data.file_name;
+                    fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+                    status_1 = jsonResponse.Status;
+                    fileType = mimeTypes[fileExtension];
+                    blob = new Blob([returnBufferBytes], { type: fileType });
+                    blobUrl = URL.createObjectURL(blob);
+                    console.log(blob);
+                    // Display the preview image
+                    //await sleep(100);
+                    chrome.tabs.create({ url: blobUrl });
+                    downloadLink = document.createElement('a');
+                    downloadLink.href = blobUrl;
+                    downloadLink.download = fileName;
+                    // Add the link to the document
+                    document.body.appendChild(downloadLink);
+                    // Click the link to trigger the download
+                    downloadLink.click();
+                    // Clean up the Object URL and remove the link from the document
+                    URL.revokeObjectURL(blobUrl);
+                    downloadLink.remove();
+                    return [3 /*break*/, 5];
+                case 4:
+                    console.error('API request failed:', response.status, response.statusText);
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
+                case 6:
+                    error_1 = _a.sent();
+                    console.error('Error:', error_1);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
+            }
+        });
+    }); });
+    publicView.addEventListener('click', function () {
+        publicInputs.style.display = 'block';
+        privateInputs.style.display = 'none';
+        submitPublicButton.style.display = 'block';
+        uploadPrivate.style.display = 'none';
+    });
+    privateView.addEventListener('click', function () {
+        publicInputs.style.display = 'none';
+        privateInputs.style.display = 'block';
+        submitPublicButton.style.display = 'none';
+        uploadPrivate.style.display = 'block';
+    });
+    uploadPrivate.addEventListener('click', function () { return __awaiter(_this, void 0, void 0, function () {
         var file, reader;
         var _this = this;
         var _a;
@@ -47,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (file) {
                 reader = new FileReader();
                 reader.onload = function (event) { return __awaiter(_this, void 0, void 0, function () {
-                    var fileContents, uploadedData, response, buffer, mimeTypes, fileEx, fileType, blob, blobUrl, downloadLink, error_1;
+                    var fileContents, uploadedData, response, buffer, mimeTypes, fileEx, fileType, blob, blobUrl, downloadLink, error_2;
                     var _a;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
@@ -106,8 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 _b.label = 5;
                             case 5: return [3 /*break*/, 7];
                             case 6:
-                                error_1 = _b.sent();
-                                console.error('Error:', error_1);
+                                error_2 = _b.sent();
+                                console.error('Error:', error_2);
                                 return [3 /*break*/, 7];
                             case 7: return [2 /*return*/];
                         }

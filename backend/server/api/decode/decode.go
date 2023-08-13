@@ -132,9 +132,8 @@ func PublicHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 
 		for _, txInfo := range privateFileManifest.TxInfo {
 			txData, txErr := decoder.GetBytesFromTx(txInfo.ChainID, txInfo.TxHash)
-
 			if txErr != nil {
-				log.Println("Unable to get the tx data: ", err)
+				log.Println("Unable to get the tx data: ", txErr)
 				responses.FailResponse(c, http.StatusBadRequest)
 				return
 			}
@@ -160,7 +159,7 @@ func PublicHandler(decoder *blckDecoder.BLCKDecoder) gin.HandlerFunc {
 		info.ReturnBuffer = returnBuffer
 		info.FileName = completeFileName
 
-		responses.SuccessResponseAsByteArray(c, info)
+		responses.SuccessResponse(c, info)
 	}
 }
 
@@ -179,8 +178,9 @@ func createTxInfoData(numTransactions *big.Int, instance *file.BlockchainFileCal
 		if err != nil {
 			return nil, err
 		}
-		txData.TxHash = tx.ChainID
 
+		txData.TxHash = tx.TransactionHash
+		log.Println(txData)
 		txDataList = append(txDataList, txData)
 	}
 
