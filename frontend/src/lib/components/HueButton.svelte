@@ -22,7 +22,7 @@
 			hue += 10;
 			hue = hue % 360;
 
-			const newColor: string = `hsl(${hue}, 100%, 50%)`;
+			const newColor: string = `hsl(${hue}, 90%, 80%)`;
 			buttonStyle = `background-color: ${newColor}`;
 
 			setTimeout(changeColor, 100); // Continuously change color while hovering
