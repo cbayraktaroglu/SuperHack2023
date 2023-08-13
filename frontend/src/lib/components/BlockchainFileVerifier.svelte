@@ -86,22 +86,17 @@
 	<h1>Verify File</h1>
 
 	<div class="p-12 grid grid-cols-2 gap-x-16 content-center gap-8">
-		<div class="col-span-2">
+		<div class="col-start-1 col-span-3">
 			<react:WorldIdWidget />
+		</div>
+		<div class="col-span-1 pt-4">
+			<button class="verify-org" on:click={verifyFileWithOrg}> Verify with EAS</button>
 		</div>
 		<div class="col-span-1 rounded-2xl">
 			<Label>Enter the UID</Label>
 			<Input bind:enteredUid class="p-10px 20px rounded-2xl" />
 		</div>
-		<div class="col-span-1 pt-4">
-			<button class="verify-org" on:click={verifyFileWithOrg}> Verify with Org !</button>
-		</div>
 	</div>
-
-	<Label>
-		Now you need to get the emmited event from {targetTX}, extract the newly created File contract
-		address. Then call the verify with users input
-	</Label>
 </div>
 
 <style>
