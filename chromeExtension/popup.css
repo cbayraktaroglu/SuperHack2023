@@ -1,16 +1,23 @@
 html {
     width: 357px;
-    height: 600px;
-    background-color: #8fa3c1;
+    height: 400px;
+    background-color: #c0cfe6;
 }
 
-
-li>img {
-    height: 30px;
+li > picture > img{
+    height:30px;
+    padding-left: 70px;
+    padding-bottom: 10px;
 }
 
-nav { 
-    background: #cfd8dc;
+hr {
+    border: none;
+    height: 40px;
+    width: 100%;
+    margin-top: 0;
+    border-bottom: 1px solid #1f1209;
+    box-shadow: 0 5px 5px -5px #333;
+    margin: -50px auto 10px;
 }
 
 nav ul {
@@ -28,7 +35,6 @@ nav ul {
 
 #popupimg {
     padding-left: 140px;
-    padding-top: 10px;
     padding-right: 10px;
 }
 
@@ -81,6 +87,7 @@ input[type=text]{
 
 #privateInputs{
     padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 #publicDropdown {
@@ -95,9 +102,6 @@ input[type=text]{
     align-items: center;
 }
 
-/* .container {
-    display: flex;
-    flex-direction: column;
-    height: 20vh;
-    justify-content: felx-end;
+.radio-label {
+    font-size:1.4em;
 }

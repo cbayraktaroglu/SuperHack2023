@@ -30,13 +30,15 @@
   <nav>
     <ul>
       <li>
-        <h2 id="popupname">KeepIt</h2>
-      </li>
-      <li>
-        <img id="popupimg" src="./images/icon128.png" alt="app-icon">
+        <picture> 
+          <source srcset="./images/Logo.webp" type = "image/webp" />
+          <img src="./images/Logo.webp" alt="Welcome" />
+        </picture>
       </li>
     </ul>
   </nav>
+
+  <hr>
 
   <div>
     <h2>Welcome to keepIt File Viewer</h2>
@@ -46,11 +48,13 @@
   <div >
 
     <div  id="fileTypeChoosing"> 
-      <input type="radio" id="publicView" name="view" value="public">
-      <label for="publicView">Public File Viewer</label><br>
       
-      <input type="radio" id="privateView" name="view" value="private">
-      <label for="privateView">Private File Viewer</label><br>
+    <input type="radio" id="publicView" name="view" value="public">
+    <label for="publicView" class = "radio-label">Public File Viewer</label><br>
+    
+    <input type="radio" id="privateView" name="view" value="private">
+    <label for="privateView" class = "radio-label">Private File Viewer</label><br>
+     
     </div>
   
     <div id="publicInputs" style="display: none;">
@@ -62,12 +66,14 @@
         <option value="optimism_goerli">Optimisim</option>
         <option value="polygon_mumbai">Polygon</option>
         <option value="zora_testnet">Zora</option>
-      </select><br>
+      </select>
+      <br>
       <button id="submitPublic">Submit</button>
     </div>
   
     <div id="privateInputs" style="display: none;">
       <input type="file" id="fileInput" accept=".json" />
+      <br>
       <button id="uploadPrivate">Upload JSON</button>
     </div>
 
